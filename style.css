@@ -1,0 +1,94 @@
+/* 전체 배경 */
+.main {
+    background-color: #fffaf7;
+}
+
+/* 페이지 여백 */
+.block-container {
+    padding-top: 2rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
+
+/* 사이드바 */
+section[data-testid="stSidebar"] {
+    background-color: #ffeceb;
+}
+
+/* 제목 */
+.main-title {
+    font-size: 42px;
+    font-weight: 800;
+    color: #ff6b81;
+    margin-bottom: 10px;
+}
+
+/* 소제목 */
+.sub-title {
+    font-size: 20px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+/* 카드 디자인 */
+.custom-card {
+    background: white;
+    padding: 20px;
+    border-radius: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: 0.3s;
+    margin-bottom: 20px;
+}
+
+.custom-card:hover {
+    transform: translateY(-5px);
+}
+
+/* 랭킹 숫자 */
+.rank-number {
+    font-size: 28px;
+    font-weight: bold;
+    color: #ff7f7f;
+}
+
+/* 장소 이름 */
+.place-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: #333;
+}
+
+/* 카테고리 */
+.category {
+    color: #888;
+    font-size: 14px;
+}
+
+/* 버튼 */
+.stButton>button {
+    background-color: #ff8fa3;
+    color: white;
+    border-radius: 15px;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+}
+
+.stButton>button:hover {
+    background-color: #ff758f;
+    color: white;
+}
+
+/* 탭 */
+.stTabs [data-baseweb="tab"] {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* metric 카드 */
+[data-testid="metric-container"] {
+    background-color: white;
+    border-radius: 20px;
+    padding: 15px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
