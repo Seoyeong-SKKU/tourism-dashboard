@@ -16,14 +16,15 @@ st.set_page_config(
 
 # ── Image helper ──────────────────────────────────────────────────────────────
 BASE_DIR = Path(__file__).parent
+ROOT_DIR = BASE_DIR.parent if (BASE_DIR.parent / "data").exists() else BASE_DIR
 
 @st.cache_data(show_spinner=False)
 def get_image_base64(image_path):
     try:
         if not image_path or str(image_path) in ("", "nan"):
             return ""
-        for base in [BASE_DIR, Path.cwd()]:
-            p = base / str(image_path)
+        for base in [BASE_DIR, ROOT_DIR, Path.cwd()]:
+            p = (base / "data" / str(image_path)) if (base / "data" / str(image_path)).exists() else (base / str(image_path))
             if p.exists():
                 with open(p, "rb") as f:
                     img_data = base64.b64encode(f.read()).decode()
@@ -228,20 +229,20 @@ section[data-testid="stSidebar"] { background: linear-gradient(180deg,#fff5f5,#f
 @st.cache_data
 def load_data():
     return {
-        "visitor":       pd.read_excel("visitor.xlsx"),
-        "summary":       pd.read_excel("summary.xlsx"),
-        "revisit":       pd.read_excel("revisit.xlsx"),
-        "korean_seoul":  pd.read_excel("korean_seoul.xlsx"),
-        "korean_busan":  pd.read_excel("korean_busan.xlsx"),
-        "foreign_seoul": pd.read_excel("foreign_seoul.xlsx"),
-        "foreign_busan": pd.read_excel("foreign_busan.xlsx"),
-        "hidden_seoul":  pd.read_excel("hidden_seoul.xlsx"),
-        "hidden_busan":  pd.read_excel("hidden_busan.xlsx"),
-        "food_seoul":    pd.read_excel("food_seoul.xlsx"),
-        "food_busan":    pd.read_excel("food_busan.xlsx"),
-        "google_seoul":  pd.read_excel("google_seoul.xlsx"),
-        "google_busan":  pd.read_excel("google_busan.xlsx"),
-        "consumption":   pd.read_excel("consumption.xlsx"),
+        "visitor":       pd.read_excel("data/visitor.xlsx"),
+        "summary":       pd.read_excel("data/summary.xlsx"),
+        "revisit":       pd.read_excel("data/revisit.xlsx"),
+        "korean_seoul":  pd.read_excel("data/korean_seoul.xlsx"),
+        "korean_busan":  pd.read_excel("data/korean_busan.xlsx"),
+        "foreign_seoul": pd.read_excel("data/foreign_seoul.xlsx"),
+        "foreign_busan": pd.read_excel("data/foreign_busan.xlsx"),
+        "hidden_seoul":  pd.read_excel("data/hidden_seoul.xlsx"),
+        "hidden_busan":  pd.read_excel("data/hidden_busan.xlsx"),
+        "food_seoul":    pd.read_excel("data/food_seoul.xlsx"),
+        "food_busan":    pd.read_excel("data/food_busan.xlsx"),
+        "google_seoul":  pd.read_excel("data/google_seoul.xlsx"),
+        "google_busan":  pd.read_excel("data/google_busan.xlsx"),
+        "consumption":   pd.read_excel("data/consumption.xlsx"),
     }
 
 data = load_data()
@@ -514,11 +515,7 @@ elif page == "recommend":
         city_r = st.radio("도시", [t["seoul"],t["busan"]], horizontal=True, key="rec_city", label_visibility="collapsed")
         h_df = data["hidden_seoul"] if city_r==t["seoul"] else data["hidden_busan"]
         h_filtered = h_df[~h_df["category_kr"].isin(FOOD_CATS)].dropna(subset=["category_kr"])
-        top70 = (
-            h_filtered[h_filtered["hidden_score"] > 10]
-            .sort_values("hidden_score", ascending=False)
-            .head(70)
-        )
+        top70 = h_filtered.sort_values("hidden_score", ascending=False).head(70)
         cats_raw = top70["category_kr"].dropna().unique().tolist()
         cat_label_map = {c: cat_name(top70[top70["category_kr"]==c].iloc[0]) for c in cats_raw}
         cat_options = [t["all_cat"]] + [cat_label_map[c] for c in cats_raw]
